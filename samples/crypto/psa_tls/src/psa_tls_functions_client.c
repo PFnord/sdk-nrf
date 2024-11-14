@@ -38,7 +38,13 @@ static int setup_tls_client_socket(void)
 		PSK_TAG,
 	};
 
+#if defined(CONFIG_MBEDTLS_TLS_VERSION_1_3)
+	LOG_INF("THIS IS CLIENT 1.3");
+	sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TLS_1_3);
+#else
+	LOG_INF("THIS IS NOT 1.3");
 	sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TLS_1_2);
+#endif
 	if (sock < 0) {
 		LOG_ERR("Failed to create a socket. Err: %d", errno);
 		return -errno;
@@ -54,6 +60,7 @@ static int setup_tls_client_socket(void)
 
 	err = setsockopt(sock, SOL_TLS, TLS_SEC_TAG_LIST, sec_tag_list,
 			 sizeof(sec_tag_list));
+	LOG_WRN("heyy: %ls", sec_tag_list);
 	if (err < 0) {
 		LOG_ERR("Failed to set TLS security TAG list. Err: %d", errno);
 		(void)close(sock);
