@@ -30,11 +30,11 @@ static int setup_tls_client_socket(void)
 {
 	int err;
 	int sock;
-	int verify = TLS_PEER_VERIFY_REQUIRED;
+	//int verify = TLS_PEER_VERIFY_REQUIRED;
 
 	/* List of security tags to register. */
 	sec_tag_t sec_tag_list[] = {
-		CA_CERTIFICATE_TAG,
+		//CA_CERTIFICATE_TAG,
 		PSK_TAG,
 	};
 
@@ -49,7 +49,7 @@ static int setup_tls_client_socket(void)
 		LOG_ERR("Failed to create a socket. Err: %d", errno);
 		return -errno;
 	}
-
+/*
 	err = setsockopt(sock, SOL_TLS, TLS_PEER_VERIFY,
 			 &verify, sizeof(verify));
 	if (err < 0) {
@@ -57,10 +57,10 @@ static int setup_tls_client_socket(void)
 		(void)close(sock);
 		return -errno;
 	}
-
+*/
 	err = setsockopt(sock, SOL_TLS, TLS_SEC_TAG_LIST, sec_tag_list,
 			 sizeof(sec_tag_list));
-	LOG_WRN("heyy: %ls", sec_tag_list);
+
 	if (err < 0) {
 		LOG_ERR("Failed to set TLS security TAG list. Err: %d", errno);
 		(void)close(sock);
@@ -111,6 +111,7 @@ void process_psa_tls(void)
 
 		if (ret < 0) {
 			LOG_WRN("Cannot make TLS connection. Err: %d", errno);
+			LOG_WRN("Cannot make TLS connection. Err: %s", strerror(errno));
 			LOG_INF("Will re-try connection in 1 second");
 			(void)close(sock);
 			k_sleep(K_MSEC(1000));
