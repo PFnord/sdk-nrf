@@ -34,7 +34,7 @@ static int setup_tls_client_socket(void)
 
 	/* List of security tags to register. */
 	sec_tag_t sec_tag_list[] = {
-		//CA_CERTIFICATE_TAG,
+		CA_CERTIFICATE_TAG,
 		PSK_TAG,
 	};
 
