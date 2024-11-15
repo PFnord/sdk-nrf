@@ -104,6 +104,8 @@
 #cmakedefine MBEDTLS_PEM_PARSE_C
 #cmakedefine MBEDTLS_PEM_WRITE_C
 
+#cmakedefine MBEDTLS_DEBUG
+
 /* TLS/DTLS configurations */
 #cmakedefine MBEDTLS_SSL_ALL_ALERT_MESSAGES
 #cmakedefine MBEDTLS_SSL_DTLS_CONNECTION_ID

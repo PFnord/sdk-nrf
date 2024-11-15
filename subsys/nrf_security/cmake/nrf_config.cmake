@@ -96,6 +96,7 @@ if (NOT MBEDTLS_PSA_CRYPTO_SPM)
   kconfig_check_and_set_base(MBEDTLS_PEM_WRITE_C)
 
   # TLS/DTLS configurations
+  kconfig_check_and_set_base(MBEDTLS_DEBUG)
   kconfig_check_and_set_base(MBEDTLS_SSL_ALL_ALERT_MESSAGES)
   kconfig_check_and_set_base(MBEDTLS_SSL_ALL_ALERT_MESSAGES)
   kconfig_check_and_set_base(MBEDTLS_SSL_DTLS_CONNECTION_ID)

@@ -350,6 +350,9 @@ config MBEDTLS_SSL_CIPHERSUITES
 	  Warning: This field has offers no validation checks.
 	  MBEDTLS_SSL_CIPHERSUITES setting in mbed TLS config file.
 
+config MBEDTLS_DEBUG
+	bool "Debug mode"
+
 if MBEDTLS_TLS_VERSION_1_3
 
 config MBEDTLS_SSL_PROTO_TLS1_3
