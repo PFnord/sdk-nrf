@@ -50,12 +50,12 @@ int main(void)
 		return APP_ERROR;
 	}
 #endif
-/*
+
 	err = tls_set_credentials();
 	if (err < 0) {
 		return APP_ERROR;
 	}
-*/
+
 	err = tls_set_preshared_key();
 	if (err < 0) {
 		return APP_ERROR;

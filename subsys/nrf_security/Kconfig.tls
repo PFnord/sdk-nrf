@@ -267,7 +267,7 @@ config MBEDTLS_SSL_KEEP_PEER_CERTIFICATE
 	  reduces RAM usage.
 	  Corresponds to MBEDTLS_SSL_KEEP_PEER_CERTIFICATE in mbed TLS config file.
 
-config MBEDTLS_SSL_TLS_1_3_COMPATIBILITY_MODE
+config MBEDTLS_SSL_TLS1_3_COMPATIBILITY_MODE
 	bool
 	prompt "Give acces to peer certificate after handshake"
 	default n
