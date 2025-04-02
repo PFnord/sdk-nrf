@@ -28,14 +28,14 @@ static const unsigned char private_key[] = {
 #elif defined(CONFIG_PSA_TLS_CERTIFICATE_TYPE_ECDSA)
 
 static const unsigned char ca_certificate[] = {
-#include "ec-root-cert.der.inc"
+#include "ec-root-cert_der_inc"
 };
 static const unsigned char server_certificate[] = {
-#include "ec-echo-apps-cert.der.inc"
+#include "ec-echo-apps-cert_der_inc"
 };
 /* This is the private key in pkcs#8 format. */
 static const unsigned char private_key[] = {
-#include "ec-echo-apps-key.der.inc"
+#include "ec-echo-apps-key_der_inc"
 };
 
 #else

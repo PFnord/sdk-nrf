@@ -39,16 +39,17 @@ endif()
 
 set(gen_dir ${ZEPHYR_BINARY_DIR}/include/generated/)
 
-foreach(inc_file
-  ec-root-cert.der
-	ec-echo-apps-cert.der
-	ec-echo-apps-key.der
+set(ECDSA_CURVE secp256r1 secp384r1 secp521r1)
+set(INC_FILE ec-root-cert.der ec-echo-apps-cert.der ec-echo-apps-key.der)
+
+foreach(curve IN LISTS ECDSA_CURVE)
+  foreach(inc_file IN LISTS INC_FILE)
+    generate_inc_file_for_target(
+      app
+      certs/ecdsa/${inc_file}_${curve}
+      ${gen_dir}/${inc_file}.inc
     )
-  generate_inc_file_for_target(
-    app
-    certs/ecdsa/${inc_file}
-    ${gen_dir}/${inc_file}.inc
-    )
+  endforeach()
 endforeach()
 
 foreach(inc_file
