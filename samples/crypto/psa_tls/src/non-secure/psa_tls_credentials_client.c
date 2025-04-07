@@ -22,18 +22,15 @@ LOG_MODULE_REGISTER(psa_tls_credentials_client_non_secure);
 #include <psa/storage_common.h>
 #include "psa/protected_storage.h"
 
-static unsigned char ca_cert_buf[sizeof(ca_certificate)];
-
-
 /** @brief Function for storing the CA certificate in Protected Storage.
  */
-static int tls_store_credentials_in_ps(void)
+static int tls_store_credentials_in_ps(certificate_info cert_info)
 {
 	LOG_INF("Storing Client CA certificate in Protected Storage");
 
 	psa_status_t status = psa_ps_set(PSA_PS_CA_CERTIFICATE_UID,
-					 sizeof(ca_certificate),
-					 ca_certificate,
+					 sizeof(cert_info.ca_certificate),
+					 cert_info.ca_certificate,
 					 PSA_STORAGE_FLAG_WRITE_ONCE);
 	if (status == PSA_ERROR_NOT_PERMITTED) {
 		LOG_INF("CA certificate is already "
@@ -50,7 +47,7 @@ static int tls_store_credentials_in_ps(void)
 /** @brief Function for fetching the CA certificate from Protected Storage,
  * and registering it for the TLS handshake.
  */
-static int tls_set_credentials_from_ps(void)
+static int tls_set_credentials_from_ps(certificate_info cert_info)
 {
 	size_t cred_len;
 
@@ -58,7 +55,7 @@ static int tls_set_credentials_from_ps(void)
 
 	psa_status_t status = psa_ps_get(PSA_PS_CA_CERTIFICATE_UID,
 					 (size_t) 0,
-					 sizeof(ca_certificate),
+					 sizeof(cert_info.ca_certificate),
 					 ca_cert_buf,
 					 &cred_len);
 	if (status != PSA_SUCCESS) {
@@ -67,9 +64,10 @@ static int tls_set_credentials_from_ps(void)
 		return status;
 	}
 
-	int err = tls_credential_add(CA_CERTIFICATE_TAG,
+	int err = tls_credential_add(cert_info.ca_certificate_tag,
 				     TLS_CREDENTIAL_CA_CERTIFICATE,
-				     ca_cert_buf, cred_len);
+				     ca_cert_buf,
+				     sizeof(cert_info.ca_certificate));
 	if (err < 0) {
 		LOG_ERR("Failed to register CA certificate from"
 			" Protected Storage: %d", err);
@@ -79,16 +77,18 @@ static int tls_set_credentials_from_ps(void)
 	return APP_SUCCESS;
 }
 
-int tls_set_credentials(void)
+int tls_set_credentials(certificate_info cert_info)
 {
 	int err;
 
-	err = tls_store_credentials_in_ps();
+	static unsigned char ca_cert_buf[sizeof(cert_info.ca_certificate)];
+
+	err = tls_store_credentials_in_ps(cert_info);
 	if (err < 0) {
 		return err;
 	}
 
-	err = tls_set_credentials_from_ps();
+	err = tls_set_credentials_from_ps(cert_info);
 	if (err < 0) {
 		return err;
 	}

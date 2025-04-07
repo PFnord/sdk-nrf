@@ -25,7 +25,7 @@ static char recv_buffer[RECV_BUFFER_SIZE]; /* Buffer for storing payload */
  *
  * @returns The socket identifier.
  */
-static int setup_dtls_server_socket(void)
+static int setup_dtls_server_socket(certificate_info cert_info)
 {
 	int err;
 	int sock;
@@ -33,10 +33,10 @@ static int setup_dtls_server_socket(void)
 
 	/* List of security tags to register. */
 	sec_tag_t sec_tag_list[] = {
-		SERVER_CERTIFICATE_TAG_SECP256R1,
-		PSK_TAG_SECP256R1,
-		SERVER_CERTIFICATE_TAG_SECP384R1,
-		PSK_TAG_SECP384R1,
+		cert_info.server_certificate_tag,
+		cert_info.private_key_tag,
+		cert_info.server_certificate_tag,
+		cert_info.private_key_tag,
 	};
 
 	memset(&my_addr, 0, sizeof(my_addr));
@@ -79,7 +79,7 @@ static int setup_dtls_server_socket(void)
  *  a server. Loops forever and accepts connections on the given port number.
  *
  */
-void process_psa_tls(void)
+void process_psa_tls(certificate_info cert_info)
 {
 	int ret;
 	int client;
@@ -88,7 +88,7 @@ void process_psa_tls(void)
 	socklen_t client_addr_len = sizeof(client_addr);
 
 	while (true) {
-		client = setup_dtls_server_socket();
+		client = setup_dtls_server_socket(cert_info);
 		if (client < 0) {
 			LOG_INF("Retrying to create a socket");
 			k_sleep(K_MSEC(1000));

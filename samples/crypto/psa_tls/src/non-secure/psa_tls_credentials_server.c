@@ -22,20 +22,17 @@ LOG_MODULE_REGISTER(psa_tls_credentials_server_non_secure);
 #include <psa/storage_common.h>
 #include "psa/protected_storage.h"
 
-static unsigned char server_cert_buf[sizeof(server_certificate)];
-static unsigned char private_key_buf[sizeof(private_key)];
-
 
 /** @brief Function for storing server certificate and server private key
  *  in Protected Storage.
  */
-static int tls_store_credentials_in_ps(void)
+static int tls_store_credentials_in_ps(certificate_info cert_info)
 {
 	LOG_INF("Storing Server certificate and key in Protected Storage");
 
 	psa_status_t status = psa_ps_set(PSA_PS_CERTIFICATE_UID,
-					 sizeof(server_certificate),
-					 server_certificate,
+					 sizeof(cert_info.server_certificate),
+					 cert_info.server_certificate,
 					 PSA_STORAGE_FLAG_WRITE_ONCE);
 	if (status == PSA_ERROR_NOT_PERMITTED) {
 		LOG_INF("Server certificate is already "
@@ -47,8 +44,8 @@ static int tls_store_credentials_in_ps(void)
 	}
 
 	status = psa_ps_set(PSA_PS_CERTIFICATE_KEY_UID,
-			    sizeof(private_key),
-			    private_key,
+			    sizeof(cert_info.private_key),
+			    cert_info.private_key,
 			    PSA_STORAGE_FLAG_WRITE_ONCE);
 	if (status == PSA_ERROR_NOT_PERMITTED) {
 		LOG_INF("Server private key is already "
@@ -66,7 +63,7 @@ static int tls_store_credentials_in_ps(void)
 /** @brief Function for fetching the server certificate and server private key
  * from Protected Storage, and registering it for the TLS handshake.
  */
-static int tls_set_credentials_from_ps(void)
+static int tls_set_credentials_from_ps(certificate_info cert_info)
 {
 	size_t cred_len;
 
@@ -76,7 +73,7 @@ static int tls_set_credentials_from_ps(void)
 	size_t key_len;
 	psa_status_t status = psa_ps_get(PSA_PS_CERTIFICATE_UID,
 					 (size_t) 0,
-					 sizeof(server_certificate),
+					 sizeof(cert_info.server_certificate),
 					 server_cert_buf,
 					 &cred_len);
 	if (status != PSA_SUCCESS) {
@@ -86,7 +83,7 @@ static int tls_set_credentials_from_ps(void)
 	}
 	status = psa_ps_get(PSA_PS_CERTIFICATE_KEY_UID,
 			    (size_t) 0,
-			    sizeof(private_key),
+			    sizeof(cert_info.private_key),
 			    private_key_buf,
 			    &key_len);
 	if (status != PSA_SUCCESS) {
@@ -95,7 +92,7 @@ static int tls_set_credentials_from_ps(void)
 		return status;
 	}
 
-	int err = tls_credential_add(SERVER_CERTIFICATE_TAG,
+	int err = tls_credential_add(cert_info.server_certificate_tag,
 				     TLS_CREDENTIAL_SERVER_CERTIFICATE,
 				     server_cert_buf, cred_len);
 	if (err < 0) {
@@ -103,7 +100,7 @@ static int tls_set_credentials_from_ps(void)
 			" Protected Storage: %d", err);
 		return err;
 	}
-	err = tls_credential_add(SERVER_CERTIFICATE_TAG,
+	err = tls_credential_add(cert_info.server_certificate_tag,
 				     TLS_CREDENTIAL_PRIVATE_KEY,
 				     private_key_buf, key_len);
 	if (err < 0) {
@@ -116,16 +113,19 @@ static int tls_set_credentials_from_ps(void)
 }
 
 
-int tls_set_credentials(void)
+int tls_set_credentials(certificate_info cert_info)
 {
 	int err;
 
-	err = tls_store_credentials_in_ps();
+	static unsigned char server_cert_buf[sizeof(cert_info.server_certificate)];
+	static unsigned char private_key_buf[sizeof(cert_info.private_key)];
+
+	err = tls_store_credentials_in_ps(cert_info);
 	if (err < 0) {
 		return err;
 	}
 
-	err = tls_set_credentials_from_ps();
+	err = tls_set_credentials_from_ps(cert_info);
 	if (err < 0) {
 		return err;
 	}

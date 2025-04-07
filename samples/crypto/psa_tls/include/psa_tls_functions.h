@@ -7,6 +7,8 @@
 #ifndef TLS_FUNCTIONS_H__
 #define TLS_FUNCTIONS_H__
 
+#include "certificate.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -21,7 +23,7 @@ extern "C" {
 /** @brief Function for starting a TLS or a DTLS thread.
  *
  */
-void process_psa_tls(void);
+void process_psa_tls(certificate_info cert_info);
 
 /** @brief Function for starting a TLS or a DTLS thread.
  *

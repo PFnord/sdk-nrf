@@ -7,6 +7,8 @@
 #ifndef TLS_CREDENTIALS_H__
 #define TLS_CREDENTIALS_H__
 
+#include "certificate.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -24,7 +26,7 @@ extern "C" {
  *
  * @retval 0 TLS credential successfully set.
  */
-int tls_set_credentials(void);
+int tls_set_credentials(certificate_info);
 
 
 #ifdef __cplusplus

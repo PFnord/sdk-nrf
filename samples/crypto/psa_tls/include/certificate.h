@@ -17,6 +17,9 @@ typedef struct {
     int private_key_tag;
 } certificate_info;
 
+extern certificate_info cert_info_secp256r1;
+extern certificate_info cert_info_secp384r1;
+
 #if defined(CONFIG_PSA_TLS_CERTIFICATE_TYPE_RSA)
 
 static const unsigned char ca_certificate[] = {

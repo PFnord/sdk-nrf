@@ -17,17 +17,17 @@
 LOG_MODULE_REGISTER(psa_tls_sample);
 
 
-static int tls_set_preshared_key(void)
+static int tls_set_preshared_key(certificate_info cert_info)
 {
 	LOG_INF("Registering Pre-shared key");
 
-	int err = tls_credential_add(PSK_TAG, TLS_CREDENTIAL_PSK,
+	int err = tls_credential_add(cert_info.private_key_tag, TLS_CREDENTIAL_PSK,
 				     psk, sizeof(psk));
 	if (err < 0) {
 		LOG_ERR("Failed to register PSK: %d", err);
 		return err;
 	}
-	err = tls_credential_add(PSK_TAG, TLS_CREDENTIAL_PSK_ID,
+	err = tls_credential_add(cert_info.private_key_tag, TLS_CREDENTIAL_PSK_ID,
 				 psk_id, strlen(psk_id));
 	if (err < 0) {
 		LOG_ERR("Failed to register PSK ID: %d", err);
@@ -51,22 +51,25 @@ int main(void)
 	}
 #endif
 
-	err = tls_set_credentials(cert_info_secp256r1);
-	if (err < 0) {
-		return APP_ERROR;
+	certificate_info cert_infos[] = {
+	    cert_info_secp256r1,
+	    cert_info_secp384r1
+	};
+
+	size_t cert_infos_count = sizeof(cert_infos) / sizeof(cert_infos[0]);
+
+	for (size_t i = 0; i < cert_infos_count; i++) {
+		err = tls_set_credentials(cert_infos[i]);
+		if (err < 0) {
+			return APP_ERROR;
+		}
+		err = tls_set_preshared_key(cert_infos[i]);
+		if (err < 0) {
+			return APP_ERROR;
+		}
+		process_psa_tls(cert_infos[i]);
 	}
 
-	err = tls_set_credentials(cert_info_secp384r1);
-	if (err < 0) {
-		return APP_ERROR;
-	}
-
-	err = tls_set_preshared_key();
-	if (err < 0) {
-		return APP_ERROR;
-	}
-
-	process_psa_tls();
 
 	return APP_SUCCESS;
 }

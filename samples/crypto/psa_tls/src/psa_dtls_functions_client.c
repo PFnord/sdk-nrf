@@ -25,7 +25,7 @@ static char recv_buffer[RECV_BUFFER_SIZE]; /* Buffer for storing payload */
  *
  * @returns The socket identifier.
  */
-static int setup_dtls_client_socket(void)
+static int setup_dtls_client_socket(certificate_info cert_info)
 {
 	int err;
 	int sock;
@@ -33,10 +33,10 @@ static int setup_dtls_client_socket(void)
 
 	/* List of security tags to register. */
 	sec_tag_t sec_tag_list[] = {
-		cert_info_secp256r1.ca_certificate_tag,
-		cert_info_secp256r1.private_key_tag,
-		cert_info_secp384r1.ca_certificate_tag,
-		cert_info_secp384r1.private_key_tag,
+		cert_info.ca_certificate_tag,
+		cert_info.private_key_tag,
+		cert_info.ca_certificate_tag,
+		cert_info.private_key_tag,
 	};
 
 	sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_DTLS_1_2);
@@ -73,7 +73,7 @@ static int setup_dtls_client_socket(void)
  *  a client. Loops forever and connects on given port number.
  *
  */
-void process_psa_tls(void)
+void process_psa_tls(certificate_info cert_info)
 {
 	int ret;
 	int sock;
@@ -89,7 +89,7 @@ void process_psa_tls(void)
 	while (true) {
 		connected = false;
 
-		sock = setup_dtls_client_socket();
+		sock = setup_dtls_client_socket(cert_info);
 		if (sock < 0) {
 			LOG_INF("Retrying acquiring socket");
 			k_sleep(K_MSEC(1000));
