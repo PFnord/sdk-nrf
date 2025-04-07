@@ -7,10 +7,15 @@
 #ifndef __CERTIFICATE_H__
 #define __CERTIFICATE_H__
 
-#define CA_CERTIFICATE_TAG 1
-#define SERVER_CERTIFICATE_TAG 2
-#define PSK_TAG 3
-
+typedef struct {
+    const unsigned char *ca_certificate;
+    const unsigned char *server_certificate;
+    const unsigned char *private_key;
+    const char *curve;
+    int server_certificate_tag;
+    int ca_certificate_tag;
+    int private_key_tag;
+} certificate_info;
 
 #if defined(CONFIG_PSA_TLS_CERTIFICATE_TYPE_RSA)
 
@@ -27,15 +32,25 @@ static const unsigned char private_key[] = {
 
 #elif defined(CONFIG_PSA_TLS_CERTIFICATE_TYPE_ECDSA)
 
-static const unsigned char ca_certificate[] = {
-#include "ec-root-cert_der_inc"
+static const unsigned char ca_certificate_secp256r1[] = {
+#include "ec-root-cert_secp256r1.der.inc"
 };
-static const unsigned char server_certificate[] = {
-#include "ec-echo-apps-cert_der_inc"
+static const unsigned char server_certificate_secp256r1[] = {
+#include "ec-echo-apps-cert_secp256r1.der.inc"
 };
 /* This is the private key in pkcs#8 format. */
-static const unsigned char private_key[] = {
-#include "ec-echo-apps-key_der_inc"
+static const unsigned char private_key_secp256r1[] = {
+#include "ec-echo-apps-key_secp256r1.der.inc"
+};
+static const unsigned char ca_certificate_secp384r1[] = {
+#include "ec-root-cert_secp384r1.der.inc"
+};
+static const unsigned char server_certificate_secp384r1[] = {
+#include "ec-echo-apps-cert_secp384r1.der.inc"
+};
+/* This is the private key in pkcs#8 format. */
+static const unsigned char private_key_secp384r1[] = {
+#include "ec-echo-apps-key_secp384r1.der.inc"
 };
 
 #else

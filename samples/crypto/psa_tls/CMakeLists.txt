@@ -13,7 +13,8 @@ project(psa_tls_sample)
 zephyr_include_directories(src ${COMMON_DIR})
 target_include_directories(app PUBLIC ./include)
 target_sources(app PRIVATE src/main.c
-                           src/psa_tls_common.c)
+                           src/psa_tls_common.c
+                           src/certificate.c)
 
 if(CONFIG_BUILD_WITH_TFM)
   set(TLS_SRC_PATH "non-secure")
@@ -39,15 +40,15 @@ endif()
 
 set(gen_dir ${ZEPHYR_BINARY_DIR}/include/generated/)
 
-set(ECDSA_CURVE secp256r1 secp384r1 secp521r1)
-set(INC_FILE ec-root-cert.der ec-echo-apps-cert.der ec-echo-apps-key.der)
+set(ECDSA_CURVE secp256r1 secp384r1)
+set(INC_FILE ec-root-cert ec-echo-apps-cert ec-echo-apps-key)
 
 foreach(curve IN LISTS ECDSA_CURVE)
   foreach(inc_file IN LISTS INC_FILE)
     generate_inc_file_for_target(
       app
-      certs/ecdsa/${inc_file}_${curve}
-      ${gen_dir}/${inc_file}.inc
+      certs/ecdsa/${inc_file}_${curve}.der
+      ${gen_dir}/${inc_file}_${curve}.der.inc
     )
   endforeach()
 endforeach()

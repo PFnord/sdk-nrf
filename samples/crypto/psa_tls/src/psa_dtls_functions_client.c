@@ -33,8 +33,10 @@ static int setup_dtls_client_socket(void)
 
 	/* List of security tags to register. */
 	sec_tag_t sec_tag_list[] = {
-		CA_CERTIFICATE_TAG,
-		PSK_TAG,
+		cert_info_secp256r1.ca_certificate_tag,
+		cert_info_secp256r1.private_key_tag,
+		cert_info_secp384r1.ca_certificate_tag,
+		cert_info_secp384r1.private_key_tag,
 	};
 
 	sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_DTLS_1_2);

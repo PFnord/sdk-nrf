@@ -33,8 +33,10 @@ static int setup_dtls_server_socket(void)
 
 	/* List of security tags to register. */
 	sec_tag_t sec_tag_list[] = {
-		SERVER_CERTIFICATE_TAG,
-		PSK_TAG,
+		SERVER_CERTIFICATE_TAG_SECP256R1,
+		PSK_TAG_SECP256R1,
+		SERVER_CERTIFICATE_TAG_SECP384R1,
+		PSK_TAG_SECP384R1,
 	};
 
 	memset(&my_addr, 0, sizeof(my_addr));

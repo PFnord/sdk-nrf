@@ -18,22 +18,22 @@ LOG_MODULE_REGISTER(psa_tls_credentials_server_secure);
 /** @brief Function for registering the server certificate and
  * server private key for the TLS handshake.
  */
-int tls_set_credentials(void)
+int tls_set_credentials(certificate_info cert_info)
 {
 	LOG_INF("Registering Server certificate and key");
 
-	int err = tls_credential_add(SERVER_CERTIFICATE_TAG,
+	int err = tls_credential_add(cert_info.server_certificate_tag,
 				     TLS_CREDENTIAL_SERVER_CERTIFICATE,
-				     server_certificate,
-				     sizeof(server_certificate));
+				     cert_info.server_certificate,
+				     sizeof(cert_info.server_certificate));
 	if (err < 0) {
 		LOG_ERR("Failed to register public certificate: %d", err);
 		return err;
 	}
 
-	err = tls_credential_add(SERVER_CERTIFICATE_TAG,
+	err = tls_credential_add(cert_info.server_certificate_tag,
 				 TLS_CREDENTIAL_PRIVATE_KEY,
-				 private_key, sizeof(private_key));
+				 cert_info.private_key, sizeof(cert_info.private_key));
 	if (err < 0) {
 		LOG_ERR("Failed to register private key: %d", err);
 		return err;

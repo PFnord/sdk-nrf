@@ -34,8 +34,10 @@ static int setup_tls_server_socket(void)
 
 	/* List of security tags to register. */
 	sec_tag_t sec_tag_list[] = {
-		SERVER_CERTIFICATE_TAG,
-		PSK_TAG,
+		cert_info_secp256r1.server_certificate_tag,
+		cert_info_secp256r1.private_key_tag,
+		cert_info_secp384r1.server_certificate_tag,
+		cert_info_secp384r1.private_key_tag,
 	};
 
 	memset(&my_addr, 0, sizeof(my_addr));

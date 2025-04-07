@@ -51,7 +51,12 @@ int main(void)
 	}
 #endif
 
-	err = tls_set_credentials();
+	err = tls_set_credentials(cert_info_secp256r1);
+	if (err < 0) {
+		return APP_ERROR;
+	}
+
+	err = tls_set_credentials(cert_info_secp384r1);
 	if (err < 0) {
 		return APP_ERROR;
 	}
