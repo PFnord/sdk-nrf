@@ -1,0 +1,65 @@
+
+    for (round = 0; round < 20; round++)
+    {
+        LOG_INF("\nStarting round: %d", round);
+        /* Fill buffer */
+        while (1)
+        {
+            psa_set_key_id(&key_attributes, mbedtls_svc_key_id_make(0, current_slot));
+            /* Make all keys unique by changing the first byte to the slot-ID value */
+            m_input_key[MODIFIED_KEY_BYTE_INDEX] = current_slot & 0xFF;
+
+            key_id = MBEDTLS_SVC_KEY_ID_INIT;
+            LOG_INF("Storing key_id: %d", current_slot);
+            status = psa_import_key(&key_attributes, m_input_key, sizeof(m_input_key), &key_id);
+            if (status == PSA_ERROR_INSUFFICIENT_STORAGE)
+            {
+                LOG_INF("Storing on slot: %d failed because of insufficient memory", current_slot);
+                break;
+            }
+            current_slot++;
+        }
+
+        stored_key_count[round] = current_slot - start_slot;
+
+        /* Buffers are full, delete all keys so that storing can restart. */
+        LOG_INF("Stored %d keys until full, first: %d last: %d", stored_key_count[round],
+                start_slot, current_slot - 1);
+
+        /* Export keys */
+        for (int d = start_slot; d < current_slot; d++)
+        {
+            LOG_INF("Exporting key_id: %d", d);
+            memset(m_output_key, 0x00, sizeof(m_input_key));
+            status =
+                psa_export_key(mbedtls_svc_key_id_make(0, d), m_output_key, sizeof(m_output_key), &out_len);
+
+            /* Expect stored keys to be unique by changing the first byte, as done when importing.
+             */
+            m_input_key[MODIFIED_KEY_BYTE_INDEX] = d & 0xFF;
+            ASSERT_THIS((status == PSA_SUCCESS), "psa_export_key, key_id: %d", d);
+            ASSERT_THIS((out_len == sizeof(m_input_key)), "Export key length check %d", 1);
+        }
+
+        /* Clear buffer */
+        for (int d = start_slot; d < current_slot; d++)
+        {
+            LOG_INF("Destroying key_id: %d", d);
+            status = psa_destroy_key(mbedtls_svc_key_id_make(0, d));
+            ASSERT_THIS((status == PSA_SUCCESS), "psa_destroy_key, key_id:%d", d);
+        }
+
+        /* We should continue storing on the next value of i */
+        LOG_DBG("Will start storing new keys from slot-ID: %d", start_slot);
+
+        /* Start storing on next slot, to make sure that failing slot-id X is not present in flash
+         * in the end  */
+        start_slot = ++current_slot;
+    }
+
+    /* Verify that all store iterations stored the same number of keys */
+    for (round = 0; round < INCREMENT_ROUNDS; round++)
+    {
+        ASSERT_THIS((stored_key_count[round] == stored_key_count[0]), "Key %d differs from key[0]",
+                     round);
+    }
