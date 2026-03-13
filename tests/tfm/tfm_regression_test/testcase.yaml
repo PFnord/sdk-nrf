@@ -25,6 +25,8 @@ tests:
     platform_allow:
       - nrf5340dk/nrf5340/cpuapp/ns
       - nrf54l15dk/nrf54l15/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20b/cpuapp/ns
       - nrf7120dk/nrf7120/cpuapp/ns
       - nrf9151dk/nrf9151/ns
       - nrf9160dk/nrf9160/ns
@@ -32,6 +34,8 @@ tests:
     integration_platforms:
       - nrf5340dk/nrf5340/cpuapp/ns
       - nrf54l15dk/nrf54l15/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20b/cpuapp/ns
       - nrf7120dk/nrf7120/cpuapp/ns
       - nrf9151dk/nrf9151/ns
       - nrf9161dk/nrf9161/ns
@@ -105,9 +109,13 @@ tests:
     timeout: 200
     platform_allow:
       - nrf54l15dk/nrf54l15/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20b/cpuapp/ns
       - nrf7120dk/nrf7120/cpuapp/ns
     integration_platforms:
       - nrf54l15dk/nrf54l15/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20b/cpuapp/ns
       - nrf7120dk/nrf7120/cpuapp/ns
   tfm.regression_sfn_lvl1:
     sysbuild: true
@@ -122,6 +130,8 @@ tests:
     platform_allow:
       - nrf5340dk/nrf5340/cpuapp/ns
       - nrf54l15dk/nrf54l15/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20b/cpuapp/ns
       - nrf7120dk/nrf7120/cpuapp/ns
       - nrf9151dk/nrf9151/ns
       - nrf9160dk/nrf9160/ns
@@ -129,6 +139,8 @@ tests:
     integration_platforms:
       - nrf5340dk/nrf5340/cpuapp/ns
       - nrf54l15dk/nrf54l15/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20b/cpuapp/ns
       - nrf7120dk/nrf7120/cpuapp/ns
       - nrf9151dk/nrf9151/ns
       - nrf9161dk/nrf9161/ns
@@ -144,6 +156,8 @@ tests:
     platform_allow:
       - nrf5340dk/nrf5340/cpuapp/ns
       - nrf54l15dk/nrf54l15/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20b/cpuapp/ns
       - nrf7120dk/nrf7120/cpuapp/ns
       - nrf9151dk/nrf9151/ns
       - nrf9160dk/nrf9160/ns
@@ -151,6 +165,8 @@ tests:
     integration_platforms:
       - nrf5340dk/nrf5340/cpuapp/ns
       - nrf54l15dk/nrf54l15/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20b/cpuapp/ns
       - nrf7120dk/nrf7120/cpuapp/ns
       - nrf9151dk/nrf9151/ns
       - nrf9161dk/nrf9161/ns
