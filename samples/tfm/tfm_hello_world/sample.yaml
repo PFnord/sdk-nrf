@@ -65,6 +65,18 @@ tests:
     extra_args:
       - CONFIG_TFM_PROFILE_TYPE_NOT_SET=y
       - CONFIG_NRF_SECURITY=y
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/ns
+      - nrf54lv10dk/nrf54lv10a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20b/cpuapp/ns
+      - nrf7120dk/nrf7120/cpuapp/ns
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/ns
+      - nrf54lv10dk/nrf54lv10a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20b/cpuapp/ns
+      - nrf7120dk/nrf7120/cpuapp/ns
   sample.tfm.hello_world.lvl2:
     sysbuild: true
     tags:
@@ -75,3 +87,15 @@ tests:
       - CONFIG_TFM_IPC=y
       - CONFIG_TFM_ISOLATION_LEVEL=2
       - CONFIG_TFM_PROFILE_TYPE_NOT_SET=y
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/ns
+      - nrf54lv10dk/nrf54lv10a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20b/cpuapp/ns
+      - nrf7120dk/nrf7120/cpuapp/ns
+    integration_platforms:
+      - nrf54l15dk/nrf54l15/cpuapp/ns
+      - nrf54lv10dk/nrf54lv10a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20a/cpuapp/ns
+      - nrf54lm20dk/nrf54lm20b/cpuapp/ns
+      - nrf7120dk/nrf7120/cpuapp/ns
