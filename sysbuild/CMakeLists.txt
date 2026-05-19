@@ -1190,9 +1190,34 @@ function(${SYSBUILD_CURRENT_MODULE_NAME}_post_cmake)
     endif()
   endif()
 
-  # If the network core image is enabled on nRF53, ensure it is flashed before the main application
   if(SB_CONFIG_SUPPORT_NETCORE AND NOT SB_CONFIG_NETCORE_NONE)
-    sysbuild_add_dependencies(FLASH ${DEFAULT_IMAGE} ${SB_CONFIG_NETCORE_IMAGE_NAME})
+    get_property(cpunet_images GLOBAL PROPERTY PM_CPUNET_IMAGES)
+
+    # Compute the network core board target so images residing on the network
+    # core can be detected even when they are not tracked in PM_CPUNET_IMAGES
+    # (e.g. b0n / net_provision in non-Partition-Manager builds).
+    string(REPLACE "/" ";" split_board_qualifiers ";${BOARD_QUALIFIERS}")
+    list(GET split_board_qualifiers 1 target_soc)
+    set(netcore_board "${BOARD}/${target_soc}/${SB_CONFIG_NETCORE_REMOTE_BOARD_TARGET_CPUCLUSTER}")
+    set(target_soc)
+
+    foreach(image ${IMAGES})
+      if(image STREQUAL ${SB_CONFIG_NETCORE_IMAGE_NAME} OR
+         image IN_LIST cpunet_images)
+        continue()
+      endif()
+      get_target_property(image_board ${image} BOARD)
+      if(image_board STREQUAL netcore_board)
+        continue()
+      endif()
+      get_target_property(image_is_build_only ${image} BUILD_ONLY)
+      if(image_is_build_only)
+        continue()
+      endif()
+      sysbuild_add_dependencies(FLASH ${image} ${SB_CONFIG_NETCORE_IMAGE_NAME})
+    endforeach()
+    set(cpunet_images)
+    set(netcore_board)
 
     if(SB_CONFIG_SECURE_BOOT_NETCORE)
       # Also ensure b0n is flashed before the network core image
